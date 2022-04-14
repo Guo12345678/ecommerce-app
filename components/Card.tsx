@@ -16,7 +16,7 @@ export function CardItem({link, description, name} : Props){
     <div style={{ width: 340, margin: 'auto' }}>
       <Card shadow="sm" p="lg">
         <Card.Section>
-          <Image src={link} />
+          <Image height={200} src={link} />
         </Card.Section>
 
         <Group position="apart" style={{ marginBottom: 5, marginTop: theme.spacing.sm }}>
