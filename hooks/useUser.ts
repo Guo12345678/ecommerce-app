@@ -1,6 +1,6 @@
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
-import { fetchJson } from '../utils/client';
+import { fetchJson } from '../lib/client';
 
 const useUser = create(
   persist(
@@ -27,7 +27,7 @@ const useUser = create(
         signup: template<{ username: string; password: string; email?: string }>('/api/signup'),
       };
     },
-    { name: 'user' }
+    { name: 'user-state' }
   )
 );
 
