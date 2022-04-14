@@ -48,6 +48,7 @@ specifiers:
   react-dom: 18.0.0
   storybook-addon-turbo-build: ^1.1.0
   storybook-dark-mode: ^1.0.9
+  tabler-icons-react: ^1.45.0
   ts-jest: ^27.1.4
   typescript: 4.6.3
   zustand: ^3.7.2
@@ -69,6 +70,7 @@ dependencies:
   prism-react-renderer: 1.3.1_react@18.0.0
   react: 18.0.0
   react-dom: 18.0.0_react@18.0.0
+  tabler-icons-react: 1.45.0_react@18.0.0
   zustand: 3.7.2_react@18.0.0
 
 devDependencies:
@@ -11925,6 +11927,14 @@ packages:
   /synchronous-promise/2.0.15:
     resolution: {integrity: sha512-k8uzYIkIVwmT+TcglpdN50pS2y1BDcUnBPK9iJeGu0Pl1lOI8pD6wtzgw91Pjpe+RxtTncw32tLxs/R0yNL2Mg==}
     dev: true
+
+  /tabler-icons-react/1.45.0_react@18.0.0:
+    resolution: {integrity: sha512-PP87bNjFb/RaFYq+9SOmusubqFzfjUdAasKchfvWHf7k0xhcNwFJbq1wXN9TWzPecT4fvn2s58wo4eLXuAXNKQ==}
+    peerDependencies:
+      react: '>= 16.8.0'
+    dependencies:
+      react: 18.0.0
+    dev: false
 
   /tapable/1.1.3:
     resolution: {integrity: sha512-4WK/bYZmj8xLr+HUCODHGF1ZFzsYffasLUgEiMBY4fgtltdO6B4WJtlSbPaDTLpYTcGVwM2qLnFTICEcNxs3kA==}

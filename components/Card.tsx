@@ -1,22 +1,24 @@
 import { Card, Image, Text, Badge, Button, Group, useMantineTheme } from '@mantine/core';
+import Link from 'next/link';
 interface Props {
-    link : string,
-    description: string,
-    name:string
+  id: string;
+  link: string;
+  description: string;
+  name: string;
 }
 
-export function CardItem({link, description, name} : Props){
+export function CardItem({ id, link, description, name }: Props) {
   const theme = useMantineTheme();
 
-  const secondaryColor = theme.colorScheme === 'dark'
-    ? theme.colors.dark[1]
-    : theme.colors.gray[7];
+  const secondaryColor = theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7];
 
   return (
     <div style={{ width: 340, margin: 'auto' }}>
       <Card shadow="sm" p="lg">
         <Card.Section>
-          <Image height={200} src={link} />
+          <Link href={link}>
+            <Image height={200} src={link} />
+          </Link>
         </Card.Section>
 
         <Group position="apart" style={{ marginBottom: 5, marginTop: theme.spacing.sm }}>
@@ -27,12 +29,14 @@ export function CardItem({link, description, name} : Props){
         </Group>
 
         <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }}>
-            {description}
+          {description}
         </Text>
 
-        <Button variant="light" color="blue" fullWidth style={{ marginTop: 14 }}>
-          Buy Item now
-        </Button>
+        <Link href={`/listing/${id}`}>
+          <Button variant="light" color="blue" fullWidth style={{ marginTop: 14 }}>
+            Buy Item now
+          </Button>
+        </Link>
       </Card>
     </div>
   );
