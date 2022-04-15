@@ -15,16 +15,14 @@ import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeTo
 import { fetchJson } from '../lib/client';
 import { identity } from '../lib/common';
 import { secureSession } from '../lib/server';
+import type { Login, Signup } from '../lib/types';
 
 const enum Action {
   login,
   signUp,
 }
 
-async function login(
-  payload: { identity: string; password: string },
-  { asVendor } = { asVendor: false }
-) {
+async function login(payload: Login, { asVendor } = { asVendor: false }) {
   const res = await fetchJson(`/api/login${asVendor ? '?type=vendor' : ''}`, payload, {
     method: 'POST',
   });
@@ -32,10 +30,7 @@ async function login(
   return new Error(await res.text());
 }
 
-async function signup(
-  payload: { username: string; password: string; email?: string },
-  { asVendor } = { asVendor: false }
-) {
+async function signup(payload: Signup, { asVendor } = { asVendor: false }) {
   const res = await fetchJson(`/api/signup${asVendor ? '?type=vendor' : ''}`, payload, {
     method: 'POST',
   });
@@ -93,7 +88,7 @@ export default function Login() {
         err = await login(values);
         break;
       case Action.signUp:
-        err = await signup({ username: values.identity, password: values.password });
+        err = await signup({ ...values, username: values.identity });
         break;
     }
     if (err) setError(err.message);

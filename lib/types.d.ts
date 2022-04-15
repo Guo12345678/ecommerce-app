@@ -5,3 +5,14 @@ interface UserSession {
   userId: string;
   username: string;
 }
+
+type Login = {
+  identity: string;
+  password: string;
+};
+
+type Signup = {
+  username: string;
+  password: string;
+  email: string;
+};
