@@ -12,7 +12,7 @@ import { useForm } from '@mantine/hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
-import { fetchJson } from '../lib/client';
+import { fetchJson, useGlobalFetch } from '../lib/client';
 import { identity } from '../lib/common';
 import { secureSession } from '../lib/server';
 import type { Login, Signup } from '../lib/types';
@@ -22,17 +22,27 @@ const enum Action {
   signUp,
 }
 
-async function login(payload: Login, { asVendor } = { asVendor: false }) {
+async function login(
+  payload: Login,
+  options: { asVendor?: boolean; fetch: typeof fetch } = { fetch }
+) {
+  const { asVendor, fetch } = options;
   const res = await fetchJson(`/api/login${asVendor ? '?type=vendor' : ''}`, payload, {
     method: 'POST',
+    fetch,
   });
   if (res.status < 400) return null;
   return new Error(await res.text());
 }
 
-async function signup(payload: Signup, { asVendor } = { asVendor: false }) {
+async function signup(
+  payload: Signup,
+  options: { asVendor?: boolean; fetch: typeof fetch } = { fetch }
+) {
+  const { asVendor, fetch } = options;
   const res = await fetchJson(`/api/signup${asVendor ? '?type=vendor' : ''}`, payload, {
     method: 'POST',
+    fetch,
   });
   if (res.status < 400) return null;
   return new Error(await res.text());
@@ -49,6 +59,10 @@ const emailRegex = /[^@]+@[^.]+\..+/;
 
 export default function () {
   const router = useRouter();
+  const fetch = useGlobalFetch((state) => state.fetch);
+  const nextRoute = Array.isArray(router.query.next)
+    ? router.query.next[0]
+    : router.query.next || '/homepage';
   const [action, setAction] = useState(
     router.query.action == 'signup' ? Action.signUp : Action.login
   );
@@ -85,14 +99,17 @@ export default function () {
     let err;
     switch (action) {
       case Action.login:
-        err = await login(values);
+        err = await login(values, { fetch });
         break;
       case Action.signUp:
-        err = await signup({ ...values, username: values.identity });
+        err = await signup({ ...values, username: values.identity }, { fetch });
         break;
     }
-    if (err) setError(err.message);
-    else router.push('/homepage');
+    if (err) {
+      setError(err.message);
+    } else {
+      router.push(nextRoute);
+    }
   }
 
   const newUser = action === Action.signUp;

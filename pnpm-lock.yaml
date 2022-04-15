@@ -42,6 +42,7 @@ specifiers:
   storybook-dark-mode: ^1.0.9
   tabler-icons-react: ^1.45.0
   typescript: 4.6.3
+  zustand: ^3.7.2
 
 dependencies:
   '@mantine/core': 4.1.3_9a74b334aa15591fb9c9f40337a495de
@@ -57,6 +58,7 @@ dependencies:
   react: 18.0.0
   react-dom: 18.0.0_react@18.0.0
   tabler-icons-react: 1.45.0_react@18.0.0
+  zustand: 3.7.2_react@18.0.0
 
 devDependencies:
   '@babel/core': 7.17.9
@@ -12509,6 +12511,18 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zustand/3.7.2_react@18.0.0:
+    resolution: {integrity: sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      react: '>=16.8'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      react: 18.0.0
+    dev: false
 
   /zwitch/1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}

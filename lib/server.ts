@@ -82,6 +82,6 @@ export function redirectTo(
 
 declare module 'iron-session' {
   interface IronSessionData {
-    user?: UserSession;
+    user: UserSession | null;
   }
 }

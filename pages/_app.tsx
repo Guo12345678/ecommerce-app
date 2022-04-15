@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { useColorScheme } from '@mantine/hooks';
+import { GlobalSpinner } from '../components/GlobalSpinner';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -30,6 +31,7 @@ export default function App(props: AppProps) {
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
+            <GlobalSpinner />
             <Component {...pageProps} />
           </NotificationsProvider>
         </MantineProvider>
