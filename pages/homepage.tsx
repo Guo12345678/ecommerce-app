@@ -2,7 +2,8 @@ import { AppShell, Navbar, Header, Grid } from '@mantine/core';
 import { GetStaticPropsResult } from 'next';
 import { CardItem } from '../components/Card';
 import { MainLinks } from '../components/NavBarItems';
-import db from '../lib/server';
+import db, { secureSession } from '../lib/server';
+import { UserSession } from '../lib/types';
 
 interface Listing {
   id: string;
@@ -13,6 +14,7 @@ interface Listing {
 }
 interface HomepageProps {
   items: Listing[];
+  user: UserSession | null;
 }
 
 const placeholder = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
@@ -31,20 +33,20 @@ const homepageStmt = db.prepare<[]>(
       L.listing_id = LI.listing_id`
 );
 
-export function getStaticProps(): GetStaticPropsResult<HomepageProps> {
-  const items: Listing[] = homepageStmt.all();
-  return {
-    props: { items },
-  };
-}
+export const getServerSideProps = secureSession<HomepageProps>(async ({ req }) => {
+  const user = req.session.user ?? null;
+  const items = homepageStmt.all();
+  return { props: { user, items } };
+});
 
-export default function HomePage({ items }: HomepageProps) {
+export default function HomePage({ items, user }: HomepageProps) {
   return (
     <AppShell
       padding="md"
       navbar={
         <Navbar width={{ base: 300 }} height={500} p="xs">
           <MainLinks />
+          {user && JSON.stringify(user)}
         </Navbar>
       }
       header={

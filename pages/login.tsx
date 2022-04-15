@@ -12,33 +12,69 @@ import { useForm } from '@mantine/hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
-import useUser from '../hooks/useUser';
+import { fetchJson } from '../lib/client';
 import { identity } from '../lib/common';
+import { secureSession } from '../lib/server';
 
 const enum Action {
   login,
   signUp,
 }
 
+async function login(
+  payload: { identity: string; password: string },
+  { asVendor } = { asVendor: false }
+) {
+  const res = await fetchJson(`/api/login${asVendor ? '?type=vendor' : ''}`, payload, {
+    method: 'POST',
+  });
+  if (res.status < 400) return null;
+  return new Error(await res.text());
+}
+
+async function signup(
+  payload: { username: string; password: string; email?: string },
+  { asVendor } = { asVendor: false }
+) {
+  const res = await fetchJson(`/api/signup${asVendor ? '?type=vendor' : ''}`, payload, {
+    method: 'POST',
+  });
+  if (res.status < 400) return null;
+  return new Error(await res.text());
+}
+
+export const getServerSideProps = secureSession(async ({ req }) => {
+  if (req.session.user) return { redirect: '/homepage', props: {} };
+  return {
+    props: {},
+  };
+});
+
+const emailRegex = /[^@]+@[^.]+\..+/;
+
 export default function Login() {
   const router = useRouter();
-  const [action, setAction] = useState(router.query.signup == '' ? Action.signUp : Action.login);
+  const [action, setAction] = useState(
+    router.query.action == 'signup' ? Action.signUp : Action.login
+  );
   const [error, setError] = useState('');
-  const user = useUser();
   const form = useForm({
     initialValues: {
       identity: '',
       password: '',
+      email: '',
       confirmPassword: '',
     },
     validationRules: {
       identity: identity,
       password: identity,
+      email: (value) => action !== Action.signUp || emailRegex.test(value),
       confirmPassword: (value, values) => action !== Action.signUp || value === values?.password,
     },
     errorMessages: {
-      identity: 'Username or email required',
+      identity: 'Username required',
       password: 'Password required',
+      email: 'Email required, or invalid email',
       confirmPassword: 'Passwords do not match',
     },
   });
@@ -54,14 +90,14 @@ export default function Login() {
     let err;
     switch (action) {
       case Action.login:
-        err = await user.login(values);
+        err = await login(values);
         break;
       case Action.signUp:
-        err = await user.signup({ username: values.identity, password: values.password });
+        err = await signup({ username: values.identity, password: values.password });
         break;
     }
-    if (err) setError(err);
-    else router.push('/');
+    if (err) setError(err.message);
+    else router.push('/homepage');
   }
 
   const newUser = action === Action.signUp;
@@ -78,14 +114,31 @@ export default function Login() {
         <Card>
           <InputWrapper error={error}>
             <form onSubmit={form.onSubmit(handleFormSubmit)}>
-              <TextInput label="Username or email" {...form.getInputProps('identity')} />
-              <TextInput label="Password" type="password" {...form.getInputProps('password')} />
+              <TextInput
+                label="Username"
+                autoComplete="username"
+                {...form.getInputProps('identity')}
+              />
+              <TextInput
+                label="Password"
+                type="password"
+                autoComplete="password"
+                {...form.getInputProps('password')}
+              />
               {newUser && (
-                <TextInput
-                  label="Confirm password"
-                  type="password"
-                  {...form.getInputProps('confirmPassword')}
-                />
+                <>
+                  <TextInput
+                    label="Confirm password"
+                    type="password"
+                    {...form.getInputProps('confirmPassword')}
+                  />
+                  <TextInput
+                    label="Email"
+                    type="email"
+                    autoComplete="email"
+                    {...form.getInputProps('email')}
+                  />
+                </>
               )}
               <Stack sx={{ paddingTop: 12 }}>
                 <Button type={newUser ? undefined : 'submit'} onClick={makeOnClick(Action.login)}>

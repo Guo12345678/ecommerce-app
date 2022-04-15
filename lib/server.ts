@@ -2,20 +2,39 @@
 
 import 'dotenv/config';
 import Database from 'better-sqlite3';
-import { openSync, readFileSync, closeSync } from 'fs';
+import { openSync, readFileSync, closeSync, existsSync } from 'fs';
+import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next';
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from 'next';
+import { UserSession } from './types';
 import { IronSessionOptions } from 'iron-session';
-import { withIronSessionApiRoute } from 'iron-session/next';
 import { assertTruthy } from './common';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
-const db = process.env.NODE_ENV === 'development' ? prepareDatabase() : Database('database.db');
+const schemaPath = process.env.SCHEMA || 'db/schema.sql';
+const db = process.env.NODE_ENV === 'development' ? prepareDatabase() : prepareProductionDatabase();
 export default db;
 
-function prepareDatabase(path = 'db/test.db') {
+function prepareDatabase(path = 'test.db') {
   // Truncate the file to nothing.
   closeSync(openSync(path, 'w'));
   const db = Database(path);
-  db.exec(readFileSync('db/schema.sql').toString());
+  for (const path of [schemaPath, 'db/mock.sql']) {
+    db.exec(readFileSync(path).toString());
+  }
+  return db;
+}
+
+function prepareProductionDatabase(path = 'database.db') {
+  const dbpath = process.env.DB || path;
+  const exists = existsSync(dbpath);
+  const db = Database(dbpath);
+  if (!exists) {
+    db.exec(readFileSync(schemaPath).toString());
+  }
   return db;
 }
 
@@ -45,10 +64,24 @@ export function secureEndpoint(fn: (req: NextApiRequest, res: NextApiResponse) =
   return withIronSessionApiRoute(fn, sessionOptions);
 }
 
+export function secureSession<T>(fn: GetServerSideProps<T>) {
+  return withIronSessionSsr(fn as any, sessionOptions);
+}
+
+export function redirectTo(
+  paths: Record<string, (_: GetServerSidePropsContext) => boolean>,
+  fn: GetServerSideProps
+): GetServerSideProps {
+  return async (ctx) => {
+    for (const [redirect, pred] of Object.entries(paths)) {
+      if (pred(ctx)) return { redirect, props: {} };
+    }
+    return fn(ctx);
+  };
+}
+
 declare module 'iron-session' {
   interface IronSessionData {
-    user?: {
-      userId: string;
-    };
+    user?: UserSession;
   }
 }

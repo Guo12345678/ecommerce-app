@@ -36,6 +36,5 @@ yarn-error.log*
 
 # storybook
 storybook-static
-db/test.db
+*.db
 .env
-database.db

@@ -9,6 +9,6 @@ export const enum Cookies {
 }
 
 export function assertTruthy<T>(_: T, mes = 'Truthy assertion failed'): NonNullable<T> {
-  if (!_) throw new Error(mes);
+  if (!_) throw new Error(mes + ' ' + String(_));
   return _ as any;
 }
