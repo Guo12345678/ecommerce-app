@@ -38,3 +38,4 @@ yarn-error.log*
 storybook-static
 db/test.db
 .env
+database.db

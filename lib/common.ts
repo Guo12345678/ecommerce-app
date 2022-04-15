@@ -7,3 +7,8 @@ export function identity<T>(_: T): _ is NonNullable<T> {
 export const enum Cookies {
   userId = 'ecom-user-id',
 }
+
+export function assertTruthy<T>(_: T, mes = 'Truthy assertion failed'): NonNullable<T> {
+  if (!_) throw new Error(mes);
+  return _ as any;
+}
