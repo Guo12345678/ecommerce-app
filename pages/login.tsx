@@ -47,7 +47,7 @@ export const getServerSideProps = secureSession(async ({ req }) => {
 
 const emailRegex = /[^@]+@[^.]+\..+/;
 
-export default function Login() {
+export default function () {
   const router = useRouter();
   const [action, setAction] = useState(
     router.query.action == 'signup' ? Action.signUp : Action.login

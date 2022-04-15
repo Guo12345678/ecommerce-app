@@ -1,4 +1,3 @@
-import { SqliteError } from 'better-sqlite3';
 import db, { HttpStatus, secureEndpoint } from '../../lib/server';
 import { Signup } from '../../lib/types';
 

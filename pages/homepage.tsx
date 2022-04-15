@@ -1,5 +1,4 @@
 import { AppShell, Navbar, Header, Grid } from '@mantine/core';
-import { GetStaticPropsResult } from 'next';
 import { CardItem } from '../components/Card';
 import { MainLinks } from '../components/NavBarItems';
 import db, { secureSession } from '../lib/server';
