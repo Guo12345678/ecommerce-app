@@ -1,5 +1,5 @@
-import db, { HttpStatus, secureEndpoint } from '../../lib/server';
-import type { Login, UserSession } from '../../lib/types';
+import db, { HttpStatus, secureEndpoint } from '@/lib/server';
+import type { Login, UserSession } from '@/lib/types';
 
 /** These statements shoud return a {@link UserSession}. */
 const login = db.prepare<[string, string, string]>(

@@ -1,8 +1,8 @@
 import { AppShell, Card, Image, Header, Navbar } from '@mantine/core';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { ColorSchemeToggle } from '../../components/ColorSchemeToggle/ColorSchemeToggle';
-import { MainLinks } from '../../components/NavBarItems';
-import db from '../../lib/server';
+import { ColorSchemeToggle } from '@/components/ColorSchemeToggle/ColorSchemeToggle';
+import { MainLinks } from '@/components/NavBarItems';
+import db from '@/lib/server';
 
 interface ListingInfo {
   id: string;

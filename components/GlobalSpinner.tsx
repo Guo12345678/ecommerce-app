@@ -1,7 +1,7 @@
+import { useLoading } from '@/lib/client';
 import { LoadingOverlay } from '@mantine/core';
-import { useGlobalFetch } from '../lib/client';
 
 export function GlobalSpinner() {
-  const loading = useGlobalFetch((state) => state.loading);
+  const { loading } = useLoading();
   return <LoadingOverlay visible={loading} />;
 }

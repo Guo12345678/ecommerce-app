@@ -1,9 +1,9 @@
 import { Button } from '@mantine/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useGlobalFetch } from '../lib/client';
-import { secureSession } from '../lib/server';
-import { UserSession } from '../lib/types';
+import { secureSession } from '@/lib/server';
+import { UserSession } from '@/lib/types';
+import { useLoading } from '@/lib/client';
 
 interface IndexProps {
   user: UserSession | null;
@@ -20,7 +20,7 @@ export const getServerSideProps = secureSession<IndexProps>(async ({ req }) => {
 
 export default function HomePage({ user }: IndexProps) {
   const router = useRouter();
-  const fetcher = useGlobalFetch((state) => state.fetch);
+  const { fetch } = useLoading();
   return (
     <>
       <h1>ECommerce Application</h1>
@@ -33,7 +33,7 @@ export default function HomePage({ user }: IndexProps) {
           Welcome back, {user.username}
           <Button
             onClick={async () => {
-              await fetcher('/api/logout');
+              await fetch('/api/logout');
               router.push('/login');
             }}
           >

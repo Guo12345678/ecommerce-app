@@ -7,4 +7,10 @@ module.exports = withBundleAnalyzer({
   eslint: {
     ignoreDuringBuilds: true,
   },
+  webpack(config, options) {
+    Object.assign(config.resolve.alias, {
+      '@': __dirname,
+    });
+    return config;
+  },
 });

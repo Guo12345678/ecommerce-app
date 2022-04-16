@@ -1,8 +1,8 @@
 import { AppShell, Navbar, Header, Grid } from '@mantine/core';
-import { CardItem } from '../components/Card';
+import { CardItem } from '@/components/Card';
 import { MainLinks } from '../components/NavBarItems';
-import db, { secureSession } from '../lib/server';
-import { UserSession } from '../lib/types';
+import db, { secureSession } from '@/lib/server';
+import { UserSession } from '@/lib/types';
 
 interface Listing {
   id: string;
