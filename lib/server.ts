@@ -52,7 +52,10 @@ export const enum HttpStatus {
 }
 
 const sessionOptions: IronSessionOptions = {
-  password: assertTruthy(process.env.SECRET_COOKIE_PASSWORD),
+  password: assertTruthy(
+    process.env.SECRET_COOKIE_PASSWORD,
+    'Secret password not found, make use the line "SECRET_COOKIE_PASSWORD=.." is in your .env file.'
+  ),
   cookieName: 'ecommerce-app',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',
@@ -60,7 +63,7 @@ const sessionOptions: IronSessionOptions = {
 };
 
 /** Wrap a handler to enable setting and accessing {@link NextApiRequest.session}. */
-export function secureEndpoint(fn: (req: NextApiRequest, res: NextApiResponse) => any) {
+export function secureEndpoint<T = any>(fn: (req: NextApiRequest, res: NextApiResponse<T>) => any) {
   return withIronSessionApiRoute(fn, sessionOptions);
 }
 

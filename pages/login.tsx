@@ -11,11 +11,11 @@ import {
 import { useForm } from '@mantine/hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
-import { fetchJson, useGlobalFetch } from '../lib/client';
-import { identity } from '../lib/common';
-import { secureSession } from '../lib/server';
-import type { Login, Signup } from '../lib/types';
+import { ColorSchemeToggle } from '@/components/ColorSchemeToggle/ColorSchemeToggle';
+import { fetchJson, useLoading } from '@/lib/client';
+import { identity } from '@/lib/common';
+import { secureSession } from '@/lib/server';
+import type { Login, Signup } from '@/lib/types';
 
 const enum Action {
   login,
@@ -57,9 +57,9 @@ export const getServerSideProps = secureSession(async ({ req }) => {
 
 const emailRegex = /[^@]+@[^.]+\..+/;
 
-export default function () {
+export default function LoginPage() {
   const router = useRouter();
-  const fetch = useGlobalFetch((state) => state.fetch);
+  const { fetch } = useLoading();
   const nextRoute = Array.isArray(router.query.next)
     ? router.query.next[0]
     : router.query.next || '/homepage';

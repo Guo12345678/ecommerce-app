@@ -1,14 +1,16 @@
-import db, { HttpStatus, secureEndpoint } from '../../lib/server';
-import { Signup } from '../../lib/types';
+import db, { HttpStatus, secureEndpoint } from '@/lib/server';
+import { Signup } from '@/lib/types';
 
 const signup = db.prepare<[string, string, string]>(
   `--sql
-insert into Buyer(username, email, password) values (?, ?, ?) returning buyer_id as userId, username`
+insert into Buyer(username, email, password) values (?, ?, ?)
+returning buyer_id as userId, username`
 );
 
 const vendorSignup = db.prepare<[string, string, string]>(
   `--sql
-insert into Vendor(username, email, password) values (?, ?, ?) returning vendor_id as userId, username`
+insert into Vendor(username, email, password) values (?, ?, ?)
+returning vendor_id as userId, username`
 );
 
 export default secureEndpoint(async (req, res) => {

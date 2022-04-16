@@ -1,4 +1,4 @@
-import { HttpStatus, secureEndpoint } from '../../lib/server';
+import { HttpStatus, secureEndpoint } from '@/lib/server';
 
 export default secureEndpoint(async (req, res) => {
   req.session.user = null;
