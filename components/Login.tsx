@@ -1,17 +1,17 @@
 import {
-  AppShell,
-  Card,
-  Center,
+  // AppShell,
+  // Card,
+  // Center,
   TextInput,
   Button,
   Stack,
   InputWrapper,
-  Header,
+  // Header,
 } from '@mantine/core';
 import { useForm } from '@mantine/hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { ColorSchemeToggle } from '@/components/ColorSchemeToggle/ColorSchemeToggle';
+// import { ColorSchemeToggle } from '@/components/ColorSchemeToggle/ColorSchemeToggle';
 import { fetchJson, useLoading } from '@/lib/client';
 import { identity } from '@/lib/common';
 import { secureSession } from '@/lib/server';
@@ -48,24 +48,16 @@ async function signup(
   return new Error(await res.text());
 }
 
-export const getServerSideProps = secureSession(async ({ req }) => {
-  if (req.session.user) return { redirect: '/homepage', props: {} };
-  return {
-    props: {},
-  };
-});
-
 const emailRegex = /[^@]+@[^.]+\..+/;
 
-export default function LoginPage() {
+interface LoginPageProps {
+  nextRoute?: string;
+}
+
+export default function LoginPage({ nextRoute }: LoginPageProps) {
   const router = useRouter();
   const { fetch } = useLoading();
-  const nextRoute = Array.isArray(router.query.next)
-    ? router.query.next[0]
-    : router.query.next || '/homepage';
-  const [action, setAction] = useState(
-    router.query.action == 'signup' ? Action.signUp : Action.login
-  );
+  const [action, setAction] = useState(Action.login);
   const [error, setError] = useState('');
   const form = useForm({
     initialValues: {
@@ -87,6 +79,7 @@ export default function LoginPage() {
       confirmPassword: 'Passwords do not match',
     },
   });
+  const targetRoute = nextRoute || '/';
   type FormValues = typeof form.values;
 
   function makeOnClick(_action: Action) {
@@ -107,63 +100,49 @@ export default function LoginPage() {
     }
     if (err) {
       setError(err.message);
+    } else if (targetRoute !== router.pathname) {
+      router.push(nextRoute || '/');
     } else {
-      router.push(nextRoute);
+      router.reload();
     }
   }
 
   const newUser = action === Action.signUp;
 
   return (
-    <AppShell
-      header={
-        <Header height="70">
-          <ColorSchemeToggle />
-        </Header>
-      }
-    >
-      <Center>
-        <Card>
-          <InputWrapper error={error}>
-            <form onSubmit={form.onSubmit(handleFormSubmit)}>
-              <TextInput
-                label="Username"
-                autoComplete="username"
-                {...form.getInputProps('identity')}
-              />
-              <TextInput
-                label="Password"
-                type="password"
-                autoComplete="password"
-                {...form.getInputProps('password')}
-              />
-              {newUser && (
-                <>
-                  <TextInput
-                    label="Confirm password"
-                    type="password"
-                    {...form.getInputProps('confirmPassword')}
-                  />
-                  <TextInput
-                    label="Email"
-                    type="email"
-                    autoComplete="email"
-                    {...form.getInputProps('email')}
-                  />
-                </>
-              )}
-              <Stack sx={{ paddingTop: 12 }}>
-                <Button type={newUser ? undefined : 'submit'} onClick={makeOnClick(Action.login)}>
-                  Login
-                </Button>
-                <Button type={newUser ? 'submit' : undefined} onClick={makeOnClick(Action.signUp)}>
-                  Sign up
-                </Button>
-              </Stack>
-            </form>
-          </InputWrapper>
-        </Card>
-      </Center>
-    </AppShell>
+    <InputWrapper error={error}>
+      <form onSubmit={form.onSubmit(handleFormSubmit)}>
+        <TextInput label="Username" autoComplete="username" {...form.getInputProps('identity')} />
+        <TextInput
+          label="Password"
+          type="password"
+          autoComplete="password"
+          {...form.getInputProps('password')}
+        />
+        {newUser && (
+          <>
+            <TextInput
+              label="Confirm password"
+              type="password"
+              {...form.getInputProps('confirmPassword')}
+            />
+            <TextInput
+              label="Email"
+              type="email"
+              autoComplete="email"
+              {...form.getInputProps('email')}
+            />
+          </>
+        )}
+        <Stack sx={{ paddingTop: 12 }}>
+          <Button type={newUser ? undefined : 'submit'} onClick={makeOnClick(Action.login)}>
+            Login
+          </Button>
+          <Button type={newUser ? 'submit' : undefined} onClick={makeOnClick(Action.signUp)}>
+            Sign up
+          </Button>
+        </Stack>
+      </form>
+    </InputWrapper>
   );
 }

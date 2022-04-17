@@ -54,31 +54,17 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export default function Listing({ info }: ListingProps) {
   return (
-    <AppShell
-      header={
-        <Header height={80}>
-          <h2>Listing Information</h2>
-          <ColorSchemeToggle />
-        </Header>
-      }
-      navbar={
-        <Navbar width={{ base: 300 }}>
-          <MainLinks />
-        </Navbar>
-      }
-    >
-      <Card shadow="md">
-        {info.link && (
-          <Card.Section>
-            <Image fit="cover" height={600} src={info.link} />
-          </Card.Section>
-        )}
-        <h5>Name</h5>
-        <p>{info.name}</p>
-        <h5>Description</h5>
-        <p>{info.description}</p>
-        <h1>${info.price}</h1>
-      </Card>
-    </AppShell>
+    <Card shadow="md">
+      {info.link && (
+        <Card.Section>
+          <Image fit="cover" height={600} src={info.link} />
+        </Card.Section>
+      )}
+      <h5>Name</h5>
+      <p>{info.name}</p>
+      <h5>Description</h5>
+      <p>{info.description}</p>
+      <h1>${info.price}</h1>
+    </Card>
   );
 }

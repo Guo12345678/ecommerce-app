@@ -53,7 +53,7 @@ export const enum HttpStatus {
 const sessionOptions: IronSessionOptions = {
   password: assertTruthy(
     process.env.SECRET_COOKIE_PASSWORD,
-    'Secret password not found, make use the line "SECRET_COOKIE_PASSWORD=.." is in your .env file.'
+    'Secret password not found, make sure the line "SECRET_COOKIE_PASSWORD=.." is in your .env file.'
   ),
   cookieName: 'ecommerce-app',
   cookieOptions: {
@@ -84,6 +84,6 @@ export function redirectTo(
 
 declare module 'iron-session' {
   interface IronSessionData {
-    user: UserSession | null;
+    user?: UserSession | null;
   }
 }

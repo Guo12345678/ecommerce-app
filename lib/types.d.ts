@@ -5,6 +5,7 @@ type Endpoint = (req: NextApiRequest, res: NextApiResponse) => any;
 interface UserSession {
   userId: string;
   username: string;
+  image?: string;
 }
 
 type Login = {
