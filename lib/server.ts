@@ -1,6 +1,5 @@
 /** Utilities for the server only. */
 
-import 'dotenv/config';
 import Database from 'better-sqlite3';
 import { openSync, readFileSync, closeSync, existsSync } from 'fs';
 import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next';
