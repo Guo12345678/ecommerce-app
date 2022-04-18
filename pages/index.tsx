@@ -1,9 +1,7 @@
-// import { AppShell, Navbar, Header, Grid, Group } from '@mantine/core';
 import { CardItem } from '@/components/Card';
-// import { MainLinks } from '../components/NavBarItems';
 import db, { secureSession } from '@/lib/server';
 import { Grid } from '@mantine/core';
-// import { UserSession } from '@/lib/types';
+import { GetServerSideProps, GetStaticProps } from 'next';
 
 interface Listing {
   id: string;
@@ -15,7 +13,6 @@ interface Listing {
 
 interface HomepageProps {
   items: Listing[];
-  // user: UserSession | null;
 }
 
 const placeholder = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
@@ -34,18 +31,19 @@ const homepageStmt = db.prepare<[]>(
       L.listing_id = LI.listing_id`
 );
 
-export const getServerSideProps = secureSession<HomepageProps>(async ({ req }) => {
-  const user = req.session.user ?? null;
-  const items = homepageStmt.all();
-  return { props: { user, items } };
-});
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: { items: homepageStmt.all() },
+    revalidate: 60, // seconds
+  };
+};
 
 export default function HomePage({ items }: HomepageProps) {
   return (
     <Grid>
       {items.map((item) => (
         <Grid.Col key={item.id} lg={3} md={4} sm={6}>
-          <CardItem {...{ ...item, link: item.link || placeholder }} />
+          <CardItem {...item} link={item.link || placeholder} />
         </Grid.Col>
       ))}
     </Grid>

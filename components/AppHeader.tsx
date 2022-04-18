@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   createStyles,
   Container,
@@ -113,8 +113,14 @@ export default function AppHeader({ user, tabs }: HeaderTabsProps) {
     router.reload();
   }
 
-  const items = tabs.map((tab) => (
-    <Tabs.Tab key={tab.title} label={tab.title} onClick={() => router.push(tab.url)}></Tabs.Tab>
+  const active = tabs.findIndex((tab) => router.pathname === tab.url);
+  const items = tabs.map((tab, index) => (
+    <Tabs.Tab
+      key={tab.title}
+      label={
+        <div onClick={index === active ? undefined : () => router.push(tab.url)}>{tab.title}</div>
+      }
+    />
   ));
 
   return (
@@ -189,7 +195,7 @@ export default function AppHeader({ user, tabs }: HeaderTabsProps) {
       <Container>
         <Tabs
           variant="outline"
-          active={0}
+          active={active}
           classNames={{
             root: classes.tabs,
             tabsListWrapper: classes.tabsList,

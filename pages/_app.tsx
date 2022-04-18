@@ -4,17 +4,27 @@ import { getCookie, setCookies } from 'cookies-next';
 import Head from 'next/head';
 import { MantineProvider, ColorScheme, ColorSchemeProvider, AppShell } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
-// import { useColorScheme } from '@mantine/hooks';
 import { GlobalSpinner } from '@/components/GlobalSpinner';
 import { LoadingProvider } from '@/lib/client';
 import AppHeader from '@/components/AppHeader';
-// import type { NextComponentType } from 'next'
+import { GetServerSidePropsContext } from 'next/types';
+import useSwr from 'swr';
+import { useColorScheme } from '@mantine/hooks';
 
-export default function App(props: AppProps) {
+interface InitialProps {
+  colorScheme: ColorScheme;
+}
+
+const getJson = (endpoint: string) => fetch(endpoint).then((e) => e.json());
+
+export default function App(props: AppProps & InitialProps) {
   const { Component, pageProps } = props;
+  const defaultColorScheme = useColorScheme();
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    (getCookie('mantine-color-scheme') as ColorScheme) || 'light'
+    props.colorScheme || defaultColorScheme
   );
+  const { data, error } = useSwr('/api/_user', getJson);
+  const user = error || data || null;
 
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
@@ -38,11 +48,15 @@ export default function App(props: AppProps) {
               <AppShell
                 header={
                   <AppHeader
-                    {...pageProps}
+                    user={user}
                     tabs={[
                       {
                         title: 'Home',
                         url: '/',
+                      },
+                      {
+                        title: 'Cart',
+                        url: '/cart',
                       },
                     ]}
                   />
@@ -57,3 +71,9 @@ export default function App(props: AppProps) {
     </>
   );
 }
+
+App.getInitialProps = async ({ ctx }: { ctx: GetServerSidePropsContext }) => {
+  return {
+    colorScheme: getCookie('mantine-color-scheme', ctx),
+  };
+};

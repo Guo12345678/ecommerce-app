@@ -1,4 +1,4 @@
-import { AppShell, Card, Image, Header, Navbar } from '@mantine/core';
+import { AppShell, Card, Image, Header, Navbar, Center } from '@mantine/core';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { ColorSchemeToggle } from '@/components/ColorSchemeToggle/ColorSchemeToggle';
 import { MainLinks } from '@/components/NavBarItems';
@@ -54,17 +54,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export default function Listing({ info }: ListingProps) {
   return (
-    <Card shadow="md">
-      {info.link && (
-        <Card.Section>
-          <Image fit="cover" height={600} src={info.link} />
-        </Card.Section>
-      )}
-      <h5>Name</h5>
-      <p>{info.name}</p>
-      <h5>Description</h5>
-      <p>{info.description}</p>
-      <h1>${info.price}</h1>
-    </Card>
+    <Center>
+      <Card shadow="md">
+        {info.link && (
+          <Card.Section>
+            <Image fit="cover" height={400} src={info.link} />
+          </Card.Section>
+        )}
+        <h5>Name</h5>
+        <p>{info.name}</p>
+        <h5>Description</h5>
+        <p>{info.description}</p>
+        <h1>${info.price}</h1>
+      </Card>
+    </Center>
   );
 }
