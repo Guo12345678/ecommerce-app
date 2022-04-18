@@ -162,7 +162,10 @@ export default function AppHeader({ user, tabs }: HeaderTabsProps) {
           >
             {user && (
               <>
-                <Menu.Item icon={<ShoppingCart size={14} color={theme.colors.red[6]} />}>
+                <Menu.Item
+                  onClick={() => router.push('/cart')}
+                  icon={<ShoppingCart size={14} color={theme.colors.red[6]} />}
+                >
                   Shopping Cart
                 </Menu.Item>
                 <Menu.Item icon={<List size={14} color={theme.colors.yellow[6]} />}>

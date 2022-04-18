@@ -5,7 +5,7 @@ import { PageProps } from '@/lib/types';
 import { fetchJson } from '@/lib/client';
 import { showNotification } from '@mantine/notifications';
 
-export interface ListingInfo extends PageProps {
+export interface ListingInfo {
   id: string;
   name: string;
   price: number;
@@ -13,7 +13,7 @@ export interface ListingInfo extends PageProps {
   link?: string;
 }
 
-interface ListingProps {
+interface ListingProps extends PageProps {
   info: ListingInfo;
 }
 
@@ -55,7 +55,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export default function Listing({ info }: ListingProps) {
+export default function Listing({ info, user }: ListingProps) {
   async function onClick() {
     const res = await fetchJson('/api/cart', info, { method: 'POST' });
     if (res.status < 400) {
@@ -87,10 +87,16 @@ export default function Listing({ info }: ListingProps) {
           <Text size="md">{info.description}</Text>
           <Text size="xl">${info.price}</Text>
           <Group>
-            <Button color="green" disabled>
-              Buy now
-            </Button>
-            <Button onClick={onClick}>Add to cart</Button>
+            {user ? (
+              <>
+                <Button color="green" disabled>
+                  Buy now
+                </Button>
+                <Button onClick={onClick}>Add to cart</Button>
+              </>
+            ) : (
+              <Button>Log in to buy</Button>
+            )}
           </Group>
         </Stack>
       </Card>

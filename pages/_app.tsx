@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AppProps } from 'next/app';
 import { getCookie, setCookies } from 'cookies-next';
 import Head from 'next/head';
@@ -12,12 +12,14 @@ import { useColorScheme } from '@mantine/hooks';
 
 const getJson = (endpoint: string) => fetch(endpoint).then((e) => e.json());
 
-export default function App(props: AppProps) {
+interface InitialProps {
+  colorScheme?: ColorScheme;
+}
+
+export default function App(props: AppProps & InitialProps) {
   const { Component, pageProps } = props;
-  const defaultColorScheme = useColorScheme();
-  const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    (getCookie('mantine-color-scheme') as ColorScheme) || defaultColorScheme
-  );
+  const preferredColorScheme = useColorScheme();
+  const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme || 'light');
   const { data, error } = useSwr('/api/_user', getJson);
   const user = error || data || null;
 
@@ -26,6 +28,11 @@ export default function App(props: AppProps) {
     setColorScheme(nextColorScheme);
     setCookies('mantine-color-scheme', nextColorScheme, { maxAge: 60 * 60 * 24 * 30 });
   };
+
+  useEffect(() => {
+    // TODO: Fix server/client color mismatch
+    if (preferredColorScheme !== colorScheme) toggleColorScheme(preferredColorScheme);
+  }, []);
 
   return (
     <>
@@ -67,3 +74,7 @@ export default function App(props: AppProps) {
     </>
   );
 }
+
+App.getInitialProps = ({ ctx }: any) => ({
+  colorScheme: getCookie('mantine-color-scheme', ctx),
+});
