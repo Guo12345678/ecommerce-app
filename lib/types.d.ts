@@ -8,6 +8,11 @@ interface UserSession {
   image?: string;
 }
 
+/** Props injected by _app.tsx */
+interface PageProps {
+  user?: UserSession | null;
+}
+
 type Login = {
   identity: string;
   password: string;

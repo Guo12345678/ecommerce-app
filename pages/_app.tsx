@@ -62,7 +62,8 @@ export default function App(props: AppProps & InitialProps) {
                   />
                 }
               >
-                <Component {...pageProps} />
+                {/** Dependency injection: unless the component overrides it, it will receive the users props. */}
+                <Component user={user} {...pageProps} />
               </AppShell>
             </LoadingProvider>
           </NotificationsProvider>

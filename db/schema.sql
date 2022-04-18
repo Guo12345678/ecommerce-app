@@ -55,9 +55,10 @@ create table Purchase (
 );
 
 create table Cart (
-    buyer_id integer,
+    buyer_id integer not null,
     card_no char(16),
-    listing_id integer,
+    listing_id integer not null,
+    qty integer,
     date char(8),
     primary key (buyer_id, listing_id),
     foreign key (buyer_id) references Buyer(buyer_id)
@@ -73,3 +74,11 @@ create table ListingImages (
     foreign key (listing_id) references Listing(listing_id)
         on update cascade on delete cascade
 );
+
+-- views
+
+create view ListingWithImages as
+select * from Listing L
+left outer join ListingImages LI
+on
+    L.listing_id = LI.listing_id;

@@ -27,3 +27,9 @@ insert into ListingImages (listing_id, url) values
     (4, 'https://m.media-amazon.com/images/I/615YaAiA-ML._SX522_.jpg'),
     (5, 'https://m.media-amazon.com/images/I/61LKmORUuXL._AC_SX679_.jpg'),
     (6, 'https://m.media-amazon.com/images/I/81Eqgg0cvrL._AC_SX679_.jpg');
+
+insert into Cart (buyer_id, listing_id, qty) values
+    (1, 1, 1),
+    (1, 2, 2),
+    (1, 3, 2),
+    (1, 4, 1);
