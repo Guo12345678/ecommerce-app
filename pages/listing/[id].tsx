@@ -1,16 +1,18 @@
-import { AppShell, Card, Image, Header, Navbar, Center } from '@mantine/core';
+import { Card, Image, Center, Text, Space, Group, Button, Stack } from '@mantine/core';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { ColorSchemeToggle } from '@/components/ColorSchemeToggle/ColorSchemeToggle';
-import { MainLinks } from '@/components/NavBarItems';
 import db from '@/lib/server';
+import { PageProps } from '@/lib/types';
+import { fetchJson } from '@/lib/client';
+import { showNotification } from '@mantine/notifications';
 
-interface ListingInfo {
+export interface ListingInfo extends PageProps {
   id: string;
   name: string;
   price: number;
   description: string;
   link?: string;
 }
+
 interface ListingProps {
   info: ListingInfo;
 }
@@ -44,28 +46,53 @@ export const getStaticProps: GetStaticProps<ListingProps> = async ({ params }) =
     props: { info: row },
   };
 };
+
 export const getStaticPaths: GetStaticPaths = async () => {
   const rows = listingIdsStmt.all();
   return {
     paths: rows.map((row) => ({ params: { id: String(row) } })),
-    fallback: false,
+    fallback: 'blocking',
   };
 };
 
 export default function Listing({ info }: ListingProps) {
+  async function onClick() {
+    const res = await fetchJson('/api/cart', info, { method: 'POST' });
+    if (res.status < 400) {
+      return showNotification({
+        title: 'Item added',
+        message: `Added "${info.name}" to cart`,
+        color: 'green',
+      });
+    }
+    showNotification({
+      title: 'Item coud not be added',
+      message: res.statusText,
+      color: 'red',
+    });
+  }
   return (
     <Center>
       <Card shadow="md">
         {info.link && (
           <Card.Section>
-            <Image fit="cover" height={400} src={info.link} />
+            <Image fit="cover" height={300} src={info.link} />
           </Card.Section>
         )}
-        <h5>Name</h5>
-        <p>{info.name}</p>
-        <h5>Description</h5>
-        <p>{info.description}</p>
-        <h1>${info.price}</h1>
+        <Stack align="flex-start">
+          <Space w="md" />
+          <Text size="xl" weight="bold">
+            {info.name}
+          </Text>
+          <Text size="md">{info.description}</Text>
+          <Text size="xl">${info.price}</Text>
+          <Group>
+            <Button color="green" disabled>
+              Buy now
+            </Button>
+            <Button onClick={onClick}>Add to cart</Button>
+          </Group>
+        </Stack>
       </Card>
     </Center>
   );

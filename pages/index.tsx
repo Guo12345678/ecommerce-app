@@ -1,7 +1,7 @@
 import { CardItem } from '@/components/Card';
-import db, { secureSession } from '@/lib/server';
+import db from '@/lib/server';
 import { Grid } from '@mantine/core';
-import { GetServerSideProps, GetStaticProps } from 'next';
+import { GetStaticProps } from 'next';
 
 interface Listing {
   id: string;
@@ -17,8 +17,9 @@ interface HomepageProps {
 
 const placeholder = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
 
-const homepageStmt = db.prepare<[]>(
-  `--sql
+const homepageStmt = db
+  .prepare<[]>(
+    `--sql
     select L.name, L.description, L.price,
            LI.url as link,
            L.listing_id as id
@@ -29,7 +30,8 @@ const homepageStmt = db.prepare<[]>(
     left outer join ListingImages LI
     on
       L.listing_id = LI.listing_id`
-);
+  )
+  .bind();
 
 export const getStaticProps: GetStaticProps = async () => {
   return {
