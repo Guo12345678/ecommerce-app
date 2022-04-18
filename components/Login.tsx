@@ -79,7 +79,7 @@ export default function LoginPage({ nextRoute }: LoginPageProps) {
       confirmPassword: 'Passwords do not match',
     },
   });
-  const targetRoute = nextRoute || router.pathname;
+  // const targetRoute = nextRoute || router.pathname;
   type FormValues = typeof form.values;
 
   function makeOnClick(_action: Action) {
@@ -100,10 +100,10 @@ export default function LoginPage({ nextRoute }: LoginPageProps) {
     }
     if (err) {
       setError(err.message);
-    } else if (targetRoute !== router.pathname) {
-      router.push(nextRoute || '/');
-    } else {
+    } else if (!nextRoute || nextRoute === router.pathname) {
       router.reload();
+    } else {
+      router.push(nextRoute);
     }
   }
 

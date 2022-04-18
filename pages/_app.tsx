@@ -9,12 +9,25 @@ import { FlagsProvider, LoadingProvider } from '@/lib/client';
 import AppHeader from '@/components/AppHeader';
 import useSwr from 'swr';
 import { useColorScheme } from '@mantine/hooks';
+import { AppFooter } from '@/components/AppFooter';
 
 const getJson = (endpoint: string) => fetch(endpoint).then((e) => e.json());
 
 interface InitialProps {
   colorScheme?: ColorScheme;
 }
+
+const headerLinks = [
+  { title: 'Home', url: '/' },
+  { title: 'Cart', url: '/cart' },
+];
+
+const footerLinks = [
+  {
+    title: 'Links',
+    links: [{ label: 'GitHub', link: 'https://github.com/Desdaemon/ecommerce-app' }],
+  },
+];
 
 export default function App(props: AppProps & InitialProps) {
   const { Component, pageProps } = props;
@@ -49,21 +62,8 @@ export default function App(props: AppProps & InitialProps) {
               <LoadingProvider>
                 <GlobalSpinner />
                 <AppShell
-                  header={
-                    <AppHeader
-                      user={user}
-                      tabs={[
-                        {
-                          title: 'Home',
-                          url: '/',
-                        },
-                        {
-                          title: 'Cart',
-                          url: '/cart',
-                        },
-                      ]}
-                    />
-                  }
+                  header={<AppHeader user={user} tabs={headerLinks} />}
+                  footer={<AppFooter data={footerLinks} />}
                 >
                   {/** Dependency injection: unless the component overrides it, it will receive the users props. */}
                   <Component user={user} {...pageProps} />
