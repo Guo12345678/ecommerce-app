@@ -19,8 +19,9 @@ insert into Listing (vendor_id, name, price, description) values
         'Kindle - With a Built-in Front Light - Black - Ad-Supported'),
     (1, 'Echo Dot', 129.99,
         'Echo Dot (4th Gen, 2020 release) | Smart speaker with Alexa | Charcoal'),
-    (1, 'Yugioh Frog The Jam Japanese Ultra Rare No Ref 1999.', 52.17, "Condition: Used: An item that has been used previously. See the seller’s listing for full details and description of any imperfections."),
-    (1, 'Ecolution Pure Intentions, 8-Quart, Stainless Steel ', 37.33, "This stockpot is perfect for tackling large meals and so much more!");
+    (1, 'Yugioh Frog The Jam Japanese Ultra Rare No Ref 1999.', 52.17, 'Condition: Used: An item that has been used previously. See the seller’s listing for full details and description of any imperfections.'),
+    (1, 'Ecolution Pure Intentions, 8-Quart, Stainless Steel ', 37.33, 'This stockpot is perfect for tackling large meals and so much more!'),
+    (1, '10 Pack! 6.5 lb. Cheese Spread - 6/Case . Spray Cheese Nacho Cheese Sauce Sphagetti Sauces Chedar Cheese Chips Dipping Sauce Creamy Cheddar Sauce Nocho Cheese', 2829.99, 'This nacho cheese is delicious! Our customers love the taste and quality of this cheddar cheese.');
 
 insert into ListingImages (listing_id, url) values
     (1, 'https://www.nme.com/wp-content/uploads/2020/06/ps5-credit-sie@2000x1270.jpg'),
@@ -30,7 +31,8 @@ insert into ListingImages (listing_id, url) values
     (5, 'https://m.media-amazon.com/images/I/61LKmORUuXL._AC_SX679_.jpg'),
     (6, 'https://m.media-amazon.com/images/I/81Eqgg0cvrL._AC_SX679_.jpg'),
     (7, 'https://i.ebayimg.com/images/g/QIMAAOSwIttiOyuQ/s-l1600.jpg'),
-    (8, 'https://m.media-amazon.com/images/I/61WufZsG7rL._AC_SL1500_.jpg');
+    (8, 'https://m.media-amazon.com/images/I/61WufZsG7rL._AC_SL1500_.jpg'),
+    (9, 'https://m.media-amazon.com/images/I/31IVwMeNJ1L.jpg');
 
 insert into Cart (buyer_id, listing_id, qty) values
     (1, 1, 1),
