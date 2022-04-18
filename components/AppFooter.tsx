@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStyles, Text, Container, ActionIcon, Group } from '@mantine/core';
 import { BrandTwitter, BrandYoutube, BrandInstagram } from 'tabler-icons-react';
+import Logo from './Logo';
 // import { MantineLogo } from '../../shared/MantineLogo';
 
 const useStyles = createStyles((theme) => ({
@@ -132,7 +133,7 @@ export function AppFooter({ data }: FooterLinksProps) {
     <footer className={classes.footer}>
       <Container className={classes.inner}>
         <div className={classes.logo}>
-          <div>E-Commerce App</div>
+          <Logo />
 
           <Text size="xs" color="dimmed" className={classes.description}>
             CWRU Databases Final Project Demonstration.

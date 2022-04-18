@@ -27,6 +27,7 @@ import { UserSession } from '@/lib/types';
 import { useRouter } from 'next/router';
 import { useFlags, useLoading } from '@/lib/client';
 import LoginPage from './Login';
+import Logo from './Logo';
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -134,7 +135,7 @@ export default function AppHeader({ user, tabs }: HeaderTabsProps) {
       </Modal>
       <Container className={classes.mainSection}>
         <Group position="apart">
-          <div>E-Commerce App</div>
+          <Logo />
 
           <Burger
             opened={opened}
