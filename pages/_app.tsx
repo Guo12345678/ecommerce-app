@@ -7,21 +7,16 @@ import { NotificationsProvider } from '@mantine/notifications';
 import { GlobalSpinner } from '@/components/GlobalSpinner';
 import { LoadingProvider } from '@/lib/client';
 import AppHeader from '@/components/AppHeader';
-import { GetServerSidePropsContext } from 'next/types';
 import useSwr from 'swr';
 import { useColorScheme } from '@mantine/hooks';
 
-interface InitialProps {
-  colorScheme: ColorScheme;
-}
-
 const getJson = (endpoint: string) => fetch(endpoint).then((e) => e.json());
 
-export default function App(props: AppProps & InitialProps) {
+export default function App(props: AppProps) {
   const { Component, pageProps } = props;
   const defaultColorScheme = useColorScheme();
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    props.colorScheme || defaultColorScheme
+    (getCookie('mantine-color-scheme') as ColorScheme) || defaultColorScheme
   );
   const { data, error } = useSwr('/api/_user', getJson);
   const user = error || data || null;
@@ -72,9 +67,3 @@ export default function App(props: AppProps & InitialProps) {
     </>
   );
 }
-
-App.getInitialProps = async ({ ctx }: { ctx: GetServerSidePropsContext }) => {
-  return {
-    colorScheme: getCookie('mantine-color-scheme', ctx),
-  };
-};
