@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { MantineProvider, ColorScheme, ColorSchemeProvider, AppShell } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { GlobalSpinner } from '@/components/GlobalSpinner';
-import { LoadingProvider } from '@/lib/client';
+import { FlagsProvider, LoadingProvider } from '@/lib/client';
 import AppHeader from '@/components/AppHeader';
 import useSwr from 'swr';
 import { useColorScheme } from '@mantine/hooks';
@@ -45,29 +45,31 @@ export default function App(props: AppProps & InitialProps) {
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
-            <LoadingProvider>
-              <GlobalSpinner />
-              <AppShell
-                header={
-                  <AppHeader
-                    user={user}
-                    tabs={[
-                      {
-                        title: 'Home',
-                        url: '/',
-                      },
-                      {
-                        title: 'Cart',
-                        url: '/cart',
-                      },
-                    ]}
-                  />
-                }
-              >
-                {/** Dependency injection: unless the component overrides it, it will receive the users props. */}
-                <Component user={user} {...pageProps} />
-              </AppShell>
-            </LoadingProvider>
+            <FlagsProvider>
+              <LoadingProvider>
+                <GlobalSpinner />
+                <AppShell
+                  header={
+                    <AppHeader
+                      user={user}
+                      tabs={[
+                        {
+                          title: 'Home',
+                          url: '/',
+                        },
+                        {
+                          title: 'Cart',
+                          url: '/cart',
+                        },
+                      ]}
+                    />
+                  }
+                >
+                  {/** Dependency injection: unless the component overrides it, it will receive the users props. */}
+                  <Component user={user} {...pageProps} />
+                </AppShell>
+              </LoadingProvider>
+            </FlagsProvider>
           </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider>

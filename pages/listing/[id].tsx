@@ -2,7 +2,7 @@ import { Card, Image, Center, Text, Space, Group, Button, Stack } from '@mantine
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import db from '@/lib/server';
 import { PageProps } from '@/lib/types';
-import { fetchJson } from '@/lib/client';
+import { fetchJson, useFlags } from '@/lib/client';
 import { showNotification } from '@mantine/notifications';
 
 export interface ListingInfo {
@@ -56,6 +56,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export default function Listing({ info, user }: ListingProps) {
+  const { setFlags } = useFlags();
   async function onClick() {
     const res = await fetchJson('/api/cart', info, { method: 'POST' });
     if (res.status < 400) {
@@ -95,7 +96,7 @@ export default function Listing({ info, user }: ListingProps) {
                 <Button onClick={onClick}>Add to cart</Button>
               </>
             ) : (
-              <Button>Log in to buy</Button>
+              <Button onClick={() => setFlags({ loginDialog: true })}>Log in to buy</Button>
             )}
           </Group>
         </Stack>

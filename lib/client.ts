@@ -32,3 +32,14 @@ export const { Provider: LoadingProvider, useContainer: useLoading } = createCon
     };
   }
 );
+
+interface Flags {
+  loginDialog?: boolean;
+}
+
+export const { Provider: FlagsProvider, useContainer: useFlags } = createContainer(
+  (init?: boolean) => {
+    const [flags, setFlags] = useState<Flags>({});
+    return { flags, setFlags };
+  }
+);

@@ -25,7 +25,7 @@ import {
 } from 'tabler-icons-react';
 import { UserSession } from '@/lib/types';
 import { useRouter } from 'next/router';
-import { useLoading } from '@/lib/client';
+import { useFlags, useLoading } from '@/lib/client';
 import LoginPage from './Login';
 
 const useStyles = createStyles((theme) => ({
@@ -104,7 +104,7 @@ export default function AppHeader({ user, tabs }: HeaderTabsProps) {
   const { fetch } = useLoading();
   const { classes, theme, cx } = useStyles();
   const [opened, toggleOpened] = useBooleanToggle(false);
-  const [loginDialog, setLoginDialog] = useState(false);
+  const { flags, setFlags } = useFlags();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const { toggleColorScheme } = useMantineColorScheme();
 
@@ -125,7 +125,11 @@ export default function AppHeader({ user, tabs }: HeaderTabsProps) {
 
   return (
     <div className={classes.header}>
-      <Modal title="Login" onClose={() => setLoginDialog(false)} opened={loginDialog}>
+      <Modal
+        title="Login"
+        onClose={() => setFlags({ loginDialog: false })}
+        opened={flags.loginDialog || false}
+      >
         <LoginPage />
       </Modal>
       <Container className={classes.mainSection}>
@@ -182,7 +186,7 @@ export default function AppHeader({ user, tabs }: HeaderTabsProps) {
                 Logout
               </Menu.Item>
             ) : (
-              <Menu.Item icon={<Login size={14} />} onClick={() => setLoginDialog(true)}>
+              <Menu.Item icon={<Login size={14} />} onClick={() => setFlags({ loginDialog: true })}>
                 Login
               </Menu.Item>
             )}

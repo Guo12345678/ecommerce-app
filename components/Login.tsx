@@ -79,7 +79,7 @@ export default function LoginPage({ nextRoute }: LoginPageProps) {
       confirmPassword: 'Passwords do not match',
     },
   });
-  const targetRoute = nextRoute || '/';
+  const targetRoute = nextRoute || router.pathname;
   type FormValues = typeof form.values;
 
   function makeOnClick(_action: Action) {
